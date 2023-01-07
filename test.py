@@ -16,7 +16,6 @@ def convert_to_dict(line):
         d[key] = value
     return d
 
-
 start_time = time.time()
 
 pdf = PyPDF2.PdfReader("test1.pdf")

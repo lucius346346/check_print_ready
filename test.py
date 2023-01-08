@@ -1,4 +1,5 @@
 # filters output
+import argparse
 import subprocess
 import time
 import PyPDF2
@@ -16,9 +17,20 @@ def convert_to_dict(line):
         d[key] = value
     return d
 
+
 start_time = time.time()
 
-pdf = PyPDF2.PdfReader("test1.pdf")
+parser = argparse.ArgumentParser()
+group = parser.add_mutually_exclusive_group()
+group.add_argument('filename', nargs='?')
+args = parser.parse_args()
+
+filename = args.filename
+
+pdf = PyPDF2.PdfReader(filename)
+
+wrong_dpi = 0
+wrong_colorspace = 0
 
 for page in range(len(pdf.pages)):
     wrong_dpi = 0
@@ -26,7 +38,7 @@ for page in range(len(pdf.pages)):
 
     current_page = page + 1
     command = 'pdfimages.exe'
-    arguments = ['-list', '-f', f'{current_page}', '-l', f'{current_page}', 'test1.pdf', f'.tmp\\{current_page}']
+    arguments = ['-list', '-f', f'{current_page}', '-l', f'{current_page}', f'{filename}', f'.tmp\\{current_page}']
 
     proc = subprocess.Popen([command] + arguments, stdout=subprocess.PIPE)
 
